@@ -47,7 +47,6 @@ export const getSingleOrders = async (req, res, next) => {
 
     res.status(200).json({ success: true, orders });
   } catch (error) {
-    console.log(error);
     return next(new ErrorHandler(error, 500));
   }
 };
@@ -55,7 +54,6 @@ export const getSingleOrders = async (req, res, next) => {
 //GET USER ORDERS//
 
 export const getUserOrders = async (req, res, next) => {
-  console.log(req.user._id.toString());
   try {
     const orders = await Order.find({ user: req.user._id.toString() });
     if (!orders) {

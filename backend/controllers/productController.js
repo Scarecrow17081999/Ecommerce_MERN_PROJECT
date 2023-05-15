@@ -108,8 +108,10 @@ export const getAllProducts = async (req, res, next) => {
       .search()
       .filter()
       .pagination(resultPerPage);
-    const data = await apiFeature.query;
 
+    let data = await apiFeature.query;
+
+    let filteredProductsCount = data.length;
     if (!data) {
       return next(new ErrorHandler("No products in database", 404));
     }
@@ -117,6 +119,11 @@ export const getAllProducts = async (req, res, next) => {
       success: true,
       data,
       productCount,
+      resultPerPage,
+      filteredProductsCount,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+    return next(new ErrorHandler("Internal server error", 500));
+  }
 };

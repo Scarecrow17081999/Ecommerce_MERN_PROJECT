@@ -2,7 +2,7 @@
 
 import ErrorHandler from "./errorHandler.js";
 
-const sentToken = async (user, statusCode, res) => {
+const sentToken = async (user, statusCode, res, message) => {
   try {
     const token = await user.generateAuthToken();
 
@@ -15,10 +15,11 @@ const sentToken = async (user, statusCode, res) => {
     };
 
     res.cookie("token", token, options).status(statusCode).json({
-      message: "User logged in successfully",
+      message,
       user,
       token,
     });
+    next();
   } catch (error) {
     return next(new ErrorHandler("Error while logging in", 400));
   }

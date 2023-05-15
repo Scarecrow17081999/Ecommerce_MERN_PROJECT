@@ -2,7 +2,7 @@ import ErrorHandler from "../utils/errorHandler.js";
 import User from "../models/userModel.js";
 import sentToken from "../utils/jwttoken.js";
 import ProductModel from "../models/productModels.js";
-// import { send } from "express/lib/response.js";
+import cloudinary from "cloudinary";
 import sendMail from "../utils/sendMail.js";
 
 // REGISTER USER//
@@ -10,16 +10,22 @@ import sendMail from "../utils/sendMail.js";
 export const registerUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
+    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+      folder: "avatars",
+      width: 1000,
+      crop: "scale",
+    });
 
     const user = await User.create({
       name,
       email,
       password,
-      avatar: { public_id: "this is a sample id", url: "this is a sample url" },
+      avatar: { public_id: myCloud.public_id, url: myCloud.secure_url },
     });
 
-    sentToken(user, 201, res);
+    sentToken(user, 201, res, "User Registeration Successful");
   } catch (error) {
+    console.log(error);
     return next(new ErrorHandler(error, 500));
   }
 };
@@ -45,7 +51,7 @@ export const loginUser = async (req, res, next) => {
       return next(new ErrorHandler("Invalid email or password", 401));
     }
 
-    sentToken(user, 200, res);
+    sentToken(user, 200, res, "User Logged In Successfully");
   } catch (error) {
     return next(new ErrorHandler(error, 500));
   }
@@ -149,12 +155,14 @@ export const updateUserPassword = async (req, res, next) => {
     user.password = req.body.newPassword;
     await user.save({ validateBeforeSave: false });
 
-    await sentToken(user, 200, res);
+    await sentToken(user, 200, res, "Password Updated Successfully");
 
     res.status(200).json({
       success: true,
+      message: "password changed successfully",
       user,
     });
+    console.log("lol");
   } catch (error) {
     console.log(error);
     return next(new ErrorHandler(error, 500));
@@ -174,11 +182,30 @@ export const updateUser = async (req, res, next) => {
       name,
       email,
     };
-    const user = await User.findOneAndUpdate(req.user.id, updateDetails, {
+
+    if (req.body.avatar != "") {
+      const user = await User.findByIdAndUpdate(req.user.id);
+      const imageId = user.avatar.public_id;
+
+      await cloudinary.v2.uploader.destroy(imageId);
+
+      const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: "avatars",
+        width: 1000,
+        crop: "scale",
+      });
+      updateDetails.avatar = {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      };
+    }
+    console.log(name, email);
+    const user = await User.findByIdAndUpdate(req.user.id, updateDetails, {
       new: true,
       runValidators: true,
       useFindAndModify: false,
     });
+    console.log(user);
     if (!user) {
       return next(new ErrorHandler("User Not Found", 404));
     }
@@ -336,7 +363,6 @@ export const createProductReview = async (req, res, next) => {
 //GET ALL REVIEWS OF A PRODUCT//
 
 export const getAllReviewsOfProduct = async (req, res, next) => {
-  console.log(req.params);
   try {
     const product = await ProductModel.findById(req.params.id);
     if (!product) {
@@ -368,7 +394,6 @@ export const deleteProductReview = async (req, res, next) => {
     const reviews = product.reviews.filter((review) => {
       return review._id.toString() != req.query.id.toString();
     });
-    console.log(reviews);
     let average = 0;
     reviews.forEach((e) => {
       average += Number(e.rating);
