@@ -25,7 +25,7 @@
     "react-icons": "^4.8.0",
     "react-rating-stars-component": "^2.2.0",
     "redux-devtools-extension": "^2.13.9",
-    "stripe": "^12.4.0",
+    "stripe": "^12.5.0",
     "validator": "^13.9.0",
     "webfontloader": "^1.6.28"
   }

@@ -54,6 +54,7 @@ export const getSingleOrders = async (req, res, next) => {
 //GET USER ORDERS//
 
 export const getUserOrders = async (req, res, next) => {
+  console.log(req.user);
   try {
     const orders = await Order.find({ user: req.user._id.toString() });
     if (!orders) {

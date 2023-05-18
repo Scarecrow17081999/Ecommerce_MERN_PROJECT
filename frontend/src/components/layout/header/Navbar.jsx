@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../../actions/userActions";
 
 export default function Navbar() {
+  const { cartItems } = useSelector((state) => state.cart);
   const { isAuthenticated, user, loading } = useSelector((state) => state.user);
   // console.log(user?.user.avatar);
 
@@ -147,7 +148,7 @@ export default function Navbar() {
             <ListItemIcon>
               <ShoppingCartIcon fontSize="small" />
             </ListItemIcon>
-            Cart
+            {`Cart(${cartItems.length})`}
           </MenuItem>
         </Link>
         <Link style={{ color: "black" }} to="/settings">

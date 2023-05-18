@@ -4,3 +4,5 @@ export const CLEAR_CART = "CLEAR_CART";
 export const CART_LOADING = "CART_LOADING";
 export const CART_SUCCESS = "CART_SUCCESS";
 export const CART_FAILURE = "CART_FAILURE";
+
+export const SAVE_SHIPPING_INFO = "SAVE_SHIPPING_INFO";

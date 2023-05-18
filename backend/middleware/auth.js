@@ -15,6 +15,7 @@ export const isAuthenticatedUser = async (req, res, next) => {
     req.user = await User.findById(decoded.id);
     next();
   } catch (error) {
+    console.log(error);
     return next(new ErrorHandler("Internal Server Error", 500));
   }
 };

@@ -1,8 +1,11 @@
-import * as cartConstant from "../constants/cartConstant.js";
+import * as productConstants from "../constants/cartConstants.js";
 
-export const cartReducer = (state = { cartItems: [] }, action) => {
+export const cartReducer = (
+  state = { cartItems: [], shippingInfo: {} },
+  action
+) => {
   switch (action.type) {
-    case cartConstant.ADD_TO_CART:
+    case productConstants.ADD_TO_CART:
       const item = action.payload;
 
       const isItemExists = state.cartItems.find(
@@ -23,12 +26,17 @@ export const cartReducer = (state = { cartItems: [] }, action) => {
         };
       }
 
-    case cartConstant.REMOVE_FROM_CART:
+    case productConstants.SAVE_SHIPPING_INFO:
       return {
         ...state,
-        [action.payload.productId]: action.payload.quantity,
+        shippingInfo: action.payload,
       };
-    case cartConstant.CLEAR_CART:
+    case productConstants.REMOVE_FROM_CART:
+      return {
+        ...state,
+        cartItems: state.cartItems.filter((i) => i.product !== action.payload),
+      };
+    case productConstants.CLEAR_CART:
       return {};
     default:
       return state;

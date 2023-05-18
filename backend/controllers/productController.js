@@ -101,7 +101,7 @@ export const getSingleProduct = async (req, res, next) => {
 export const getAllProducts = async (req, res, next) => {
   try {
     //pagination//
-    const resultPerPage = 5;
+    const resultPerPage = 8;
     /////////////////
     const productCount = await ProductModel.countDocuments();
     const apiFeature = new ApiFeatures(ProductModel.find(), req.query)

@@ -26,7 +26,7 @@ process.on("uncaughtException", (err) => {
 //connecting to database
 import database from "./database/database.js";
 // cloudinay config
-
+console.log("cloudinary config");
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,

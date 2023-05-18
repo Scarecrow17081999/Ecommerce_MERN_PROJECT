@@ -23,7 +23,7 @@ export const registerUser = async (req, res, next) => {
       avatar: { public_id: myCloud.public_id, url: myCloud.secure_url },
     });
 
-    sentToken(user, 201, res, "User Registeration Successful");
+    sentToken(user, 201, res, "User Registeration Successful", next);
   } catch (error) {
     console.log(error);
     return next(new ErrorHandler(error, 500));
@@ -51,7 +51,7 @@ export const loginUser = async (req, res, next) => {
       return next(new ErrorHandler("Invalid email or password", 401));
     }
 
-    sentToken(user, 200, res, "User Logged In Successfully");
+    sentToken(user, 200, res, "User Logged In Successfully", next);
   } catch (error) {
     return next(new ErrorHandler(error, 500));
   }

@@ -13,10 +13,9 @@ import { authorizeRole, isAuthenticatedUser } from "../middleware/auth.js";
 const router = express.Router();
 
 router.route("/order/new").post(isAuthenticatedUser, createOrder);
-router
-  .route("/orders/:id")
-  .get(isAuthenticatedUser, authorizeRole("admin"), getSingleOrders);
-router.route("/orders/me").get(isAuthenticatedUser, getUserOrders);
+router.route("/orders/:id").get(isAuthenticatedUser, getSingleOrders);
+
+router.route("/order/me").get(isAuthenticatedUser, getUserOrders);
 
 router
   .route("/admin/orders")

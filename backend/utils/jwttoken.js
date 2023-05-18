@@ -2,7 +2,7 @@
 
 import ErrorHandler from "./errorHandler.js";
 
-const sentToken = async (user, statusCode, res, message) => {
+const sentToken = async (user, statusCode, res, message, next) => {
   try {
     const token = await user.generateAuthToken();
 

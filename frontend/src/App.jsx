@@ -1,5 +1,5 @@
 import "./App.scss";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/layout/header/Header.jsx";
 import Footer from "./components/layout/footer/Footer";
 import { Route, Routes } from "react-router-dom";
@@ -12,14 +12,30 @@ import Products from "./components/product/Products.jsx";
 import Search from "./components/product/Search.jsx";
 import LoginSignUp from "./components/user/LoginSignUp.jsx";
 import Profile from "./components/user/Profile.jsx";
-
+import Cart from "./components/Cart/Cart.jsx";
+import Shipping from "./components/Cart/Shipping.jsx";
+import MyOrders from "./components/Orders/MyOrders.jsx";
+import OrderDetails from "./components/Orders/OrderDetails.jsx";
 import store from "./Store";
 import { loadUser } from "./actions/userActions";
 import { useSelector } from "react-redux";
 import ForgotPassword from "./components/user/forgotPassword";
+import ConfirmOrder from "./components/Cart/ConfirmOrder";
+import Payment from "./components/Cart/payment";
+import axios from "axios";
+import OrderSuccess from "./components/Cart/OrderSuccess";
 
 function App() {
   // const { isAuthenticated } = useSelector((state) => state.user);
+
+  const [stripeApiKey, setStripeApiKey] = useState("");
+
+  async function getStripeApiKey() {
+    const { data } = await axios.get("/api/v1/stripeapikey");
+    setStripeApiKey(data.stripeApiKey);
+
+    console.log(data);
+  }
   useEffect(() => {
     WebFont.load({
       google: {
@@ -27,8 +43,8 @@ function App() {
       },
     });
     store.dispatch(loadUser());
+    getStripeApiKey();
   }, []);
-
   return (
     <div className="App">
       <Header />
@@ -42,6 +58,13 @@ function App() {
         <Route path="/login" element={<LoginSignUp />} />
         <Route path="/me/update" element={<UpdateProfile />} />
         <Route path="/password/forgot" element={<ForgotPassword />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/shipping" element={<Shipping />} />
+        <Route path="/order/confirm" element={<ConfirmOrder />} />
+        <Route path="/success" element={<OrderSuccess />} />
+        <Route path="/order/me" element={<MyOrders />} />
+        <Route path="/orders/:id" element={<OrderDetails />} />
+        <Route path="/payment" element={<Payment stripeKey={stripeApiKey} />} />
         <Route
           path="/password/update"
           element={<UpdatePassword props={null} />}

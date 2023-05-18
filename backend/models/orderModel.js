@@ -27,7 +27,7 @@ const orderSchema = new mongoose.Schema({
       required: true,
     },
   },
-  order: [
+  orderItems: [
     {
       name: {
         type: String,
