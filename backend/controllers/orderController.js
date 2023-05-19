@@ -96,16 +96,20 @@ export const getAllOrders = async (req, res, next) => {
 //UPDATE ORDER STATUS//
 export const updateOrderStatus = async (req, res, next) => {
   try {
-    const order = await Order.find(req.params.id);
+    const order = await Order.findById(req.params.id);
+
     if (!order) {
       return next(new ErrorHandler(`No orders Found`, 404));
     }
-    if (order.status === "Delivered") {
+
+    if (order.orderStatus === "Delivered") {
       return next(new ErrorHandler(`Order is already Delivered`, 400));
     }
-    order.orderItems.forEach(async (orderItem) => {
-      await updateStock(orderItem.Product, orderItem.quantity);
-    });
+    if (req.body.status == "Shipped") {
+      order.orderItems.forEach(async (orderItem) => {
+        await updateStock(orderItem.Product, orderItem.quantity);
+      });
+    }
 
     order.orderStatus = req.body.status;
     if (req.body.status === "Delivered") {
@@ -114,7 +118,7 @@ export const updateOrderStatus = async (req, res, next) => {
 
     await order.save();
 
-    res.status(200).json({ success: true, orders });
+    res.status(200).json({ success: true, order });
   } catch (error) {
     console.log(error);
     return next(new ErrorHandler(error, 500));

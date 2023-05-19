@@ -103,6 +103,8 @@ const userReducer = (state = { user: {} }, action) => {
 const profileReducer = (state = {}, action) => {
   switch (action.type) {
     case productConstants.UPDATE_USER_REQUEST:
+    case productConstants.UPDATE_USER_DETAIL_REQUEST:
+    case productConstants.DELETE_USER_DETAIL_REQUEST:
       return {
         ...state,
         loading: true,
@@ -110,20 +112,39 @@ const profileReducer = (state = {}, action) => {
         error: false,
       };
     case productConstants.UPDATE_USER_SUCCESS:
+    case productConstants.UPDATE_USER_DETAIL_SUCCESS:
       return {
         ...state,
         loading: false,
         isUpadated: action.payload,
         error: false,
       };
+    case productConstants.DELETE_USER_DETAIL_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        isDeleted: action.payload,
+        message: action.payload.message,
+        error: false,
+      };
     case productConstants.UPDATE_USER_RESET:
+    case productConstants.UPDATE_USER_DETAIL_RESET:
       return {
         ...state,
         loading: false,
         isUpadated: false,
         error: false,
       };
+    case productConstants.DELETE_USER_DETAIL_RESET:
+      return {
+        ...state,
+        loading: false,
+        isDeleted: false,
+        error: false,
+      };
     case productConstants.UPDATE_USER_FAILURE:
+    case productConstants.UPDATE_USER_DETAIL_FAILURE:
+    case productConstants.DELETE_USER_DETAIL_FAILURE:
       return {
         loading: false,
         error: action.payload,
@@ -199,5 +220,76 @@ const forgotPasswordReducer = (state = {}, action) => {
       return state;
   }
 };
-export { profileReducer, forgotPasswordReducer };
+
+const allUsersReducer = (state = { users: [] }, action) => {
+  switch (action.type) {
+    case productConstants.ALL_USER_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        user: action.payload,
+        error: false,
+      };
+    case productConstants.ALL_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        users: action.payload,
+        error: false,
+      };
+    case productConstants.ALL_USER_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case productConstants.CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+
+    default:
+      return state;
+  }
+};
+const usersDetailsReducer = (state = { user: {} }, action) => {
+  switch (action.type) {
+    case productConstants.USER_DETAIL_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        user: action.payload,
+        error: false,
+      };
+    case productConstants.USER_DETAIL_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        user: action.payload,
+        error: false,
+      };
+    case productConstants.USER_DETAIL_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case productConstants.CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+
+    default:
+      return state;
+  }
+};
+
+export {
+  profileReducer,
+  forgotPasswordReducer,
+  allUsersReducer,
+  usersDetailsReducer,
+};
 export default userReducer;

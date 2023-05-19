@@ -23,7 +23,8 @@
   height: 70%;
   width: 55vh;
   background-color: white;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.267);
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
 }
 
 .createProductForm > div {

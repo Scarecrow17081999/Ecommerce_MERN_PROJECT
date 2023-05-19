@@ -187,6 +187,106 @@ export const forgotUserPassword = (email) => {
   };
 };
 
+//load  all user
+export const getAllUsers = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.ALL_USER_REQUEST,
+      });
+      const { data } = await axios.get(`/api/v1/admin/users`);
+      dispatch({
+        type: productConstants.ALL_USER_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: productConstants.ALL_USER_FAILURE,
+        payload: error.response.data.message,
+      });
+    }
+  };
+};
+//load  user details
+export const getUsersDetails = (id) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.USER_DETAIL_REQUEST,
+      });
+      const { data } = await axios.get(`/api/v1/admin/user/${id}`);
+      dispatch({
+        type: productConstants.USER_DETAIL_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: productConstants.USER_DETAIL_FAILURE,
+        payload: error.response.data.message,
+      });
+    }
+  };
+};
+
+//update user
+export const updateUserByAdmin = (id, userData) => {
+  return async (dispatch) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      dispatch({
+        type: productConstants.UPDATE_USER_DETAIL_REQUEST,
+      });
+      const { data } = await axios.put(
+        `/api/v1/admin/user/${id}`,
+        userData,
+        config
+      );
+      dispatch({
+        type: productConstants.UPDATE_USER_DETAIL_SUCCESS,
+        payload: data,
+      });
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: productConstants.UPDATE_USER_DETAIL_FAILURE,
+        payload: error,
+      });
+    }
+  };
+};
+//deleteUser user
+export const deleteUserByAdmin = (id) => {
+  return async (dispatch) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      dispatch({
+        type: productConstants.DELETE_USER_DETAIL_REQUEST,
+      });
+      const { data } = await axios.delete(`/api/v1/admin/user/${id}`);
+      dispatch({
+        type: productConstants.DELETE_USER_DETAIL_SUCCESS,
+        payload: data,
+      });
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: productConstants.DELETE_USER_DETAIL_FAILURE,
+        payload: error,
+      });
+    }
+  };
+};
+
 //clear errors
 export const clearErrors = () => async (dispatch) => {
   dispatch({

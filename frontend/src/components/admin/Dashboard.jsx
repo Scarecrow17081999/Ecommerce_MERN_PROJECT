@@ -9,15 +9,23 @@ import { Doughnut, Line } from "react-chartjs-2";
 import { Chart as ChartJS, registerables } from "chart.js";
 import { Chart } from "react-chartjs-2";
 import { getAdminProducts } from "../../actions/productAction.jsx";
+import { getAllOrderDetails } from "../../actions/orderActions.jsx";
+import { getAllUsers } from "../../actions/userActions.jsx";
 ChartJS.register(...registerables);
 
 const Dashboard = () => {
-  const dispatch = useDispatch((state) => state.products);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAdminProducts());
+    dispatch(getAllOrderDetails());
+    dispatch(getAllUsers());
   }, []);
   const { error, products, loading } = useSelector((state) => state.products);
+  const { orders } = useSelector((state) => state.allOrders);
+  const { users } = useSelector((state) => state.allUsers);
+
+  console.log(users?.users);
 
   let outOfStock = 0;
   products &&
@@ -43,7 +51,6 @@ const Dashboard = () => {
     labels: ["Out of Stock", "In Stock"],
     datasets: [
       {
-        // label: "Total Amount",
         backgroundColor: ["#00A6B4", "#6800B4"],
         hoverBackgroundColor: ["#4B5000", "#35014F"],
         data: [outOfStock, products?.length - outOfStock],
@@ -72,11 +79,11 @@ const Dashboard = () => {
               </Link>
               <Link to="/admin/orders">
                 <p>Orders</p>
-                <p>30</p>
+                <p>{orders?.orders?.length}</p>
               </Link>
               <Link to="/admin/users">
                 <p>Users</p>
-                <p>30</p>
+                <p>{users?.users?.length}</p>
               </Link>
             </div>
           </div>
