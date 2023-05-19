@@ -12,7 +12,7 @@ const OrderDetails = () => {
   const { id } = useParams();
 
   const { order, loading, error } = useSelector((state) => state.orderDetails);
-
+  console.log(order.orderItems);
   useEffect(() => {
     dispatch(getOrderDetails(id));
   }, [dispatch]);
@@ -86,8 +86,7 @@ const OrderDetails = () => {
                   order.orderItems.map((item, i) => (
                     <div key={item._id}>
                       <img src={item.image} alt="" />
-
-                      <Link to={`/product/${item._id}`}>{item.name}</Link>
+                      <Link to={`/product/${item.product}`}>{item.name}</Link>
 
                       <span>
                         {item.quantity} X {item.price} = Rs.

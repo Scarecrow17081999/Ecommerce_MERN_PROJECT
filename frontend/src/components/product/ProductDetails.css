@@ -6,7 +6,12 @@
   box-sizing: border-box;
   display: flex;
 }
-
+.redColor {
+  color: red !important;
+}
+.greenColor {
+  color: green !important;
+}
 .ProductDetails > div {
   width: 50%;
   display: flex;

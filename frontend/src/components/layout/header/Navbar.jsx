@@ -130,7 +130,7 @@ export default function Navbar() {
           </MenuItem>
         </Link>
         {user?.user?.role == "admin" && (
-          <Link style={{ color: "black" }} to="/dashboard">
+          <Link style={{ color: "black" }} to="/admin/dashboard">
             <MenuItem onClick={handleClose}>
               <ListItemIcon>
                 <SpaceDashboardIcon fontSize="small" />

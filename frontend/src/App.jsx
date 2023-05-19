@@ -18,18 +18,16 @@ import MyOrders from "./components/Orders/MyOrders.jsx";
 import OrderDetails from "./components/Orders/OrderDetails.jsx";
 import store from "./Store";
 import { loadUser } from "./actions/userActions";
-import { useSelector } from "react-redux";
 import ForgotPassword from "./components/user/forgotPassword";
 import ConfirmOrder from "./components/Cart/ConfirmOrder";
 import Payment from "./components/Cart/payment";
 import axios from "axios";
 import OrderSuccess from "./components/Cart/OrderSuccess";
+import Dashboard from "./components/admin/Dashboard.jsx";
+import ProductList from "./components/admin/ProductList.jsx";
 
 function App() {
-  // const { isAuthenticated } = useSelector((state) => state.user);
-
   const [stripeApiKey, setStripeApiKey] = useState("");
-
   async function getStripeApiKey() {
     const { data } = await axios.get("/api/v1/stripeapikey");
     setStripeApiKey(data.stripeApiKey);
@@ -64,11 +62,14 @@ function App() {
         <Route path="/success" element={<OrderSuccess />} />
         <Route path="/order/me" element={<MyOrders />} />
         <Route path="/orders/:id" element={<OrderDetails />} />
-        <Route path="/payment" element={<Payment stripeKey={stripeApiKey} />} />
         <Route
           path="/password/update"
           element={<UpdatePassword props={null} />}
         />
+        <Route path="/payment" element={<Payment stripeKey={stripeApiKey} />} />
+        {/* //ADMIN ROUTES// */}
+        <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/products" element={<ProductList />} />
       </Routes>
       <Footer />
     </div>

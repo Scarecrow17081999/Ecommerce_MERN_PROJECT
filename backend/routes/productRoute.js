@@ -4,6 +4,7 @@ import { Router } from "express";
 import {
   createProduct,
   deleteProduct,
+  getAdminProducts,
   getAllProducts,
   getSingleProduct,
   updateProduct,
@@ -18,6 +19,9 @@ import {
 export const router = express.Router();
 
 router.route("/products").get(isAuthenticatedUser, getAllProducts);
+router
+  .route("/admin/products")
+  .get(isAuthenticatedUser, authorizeRole("admin"), getAdminProducts);
 router
   .route("/admin/product/new")
   .post(isAuthenticatedUser, authorizeRole("admin"), createProduct);

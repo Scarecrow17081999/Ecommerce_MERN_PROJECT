@@ -3,20 +3,38 @@ import "./ProductDetails.css";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import Carousel from "react-material-ui-carousel";
-import { clearErrors, getProductDetails } from "../../actions/productAction";
+import {
+  clearErrors,
+  getProductDetails,
+  newReview,
+} from "../../actions/productAction";
 import ProductCarousel from "./ProductCarousel";
 import ReviewCard from "./ReviewCard.jsx";
 import { useToast } from "@chakra-ui/react";
 import Loader from "../layout/loader/Loader";
 import Metadata from "../layout/Metadata";
 import { addToCart } from "../../actions/cartActions";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Rating,
+} from "@mui/material";
 const ProductDetails = () => {
   let { id } = useParams();
   const toast = useToast();
   const dispatch = useDispatch();
   const [count, setCount] = React.useState(1);
+  const [open, setOpen] = React.useState(false);
+  const [comment, setComment] = React.useState("");
+  const [rating, setRating] = React.useState(0);
   const { product, loading, error } = useSelector(
     (state) => state.productDetails
+  );
+  const { success, error: reviewError } = useSelector(
+    (state) => state.newReview
   );
   const errorToast = (message) => {
     toast({
@@ -33,8 +51,20 @@ const ProductDetails = () => {
 
       dispatch(clearErrors());
     }
+    if (reviewError) {
+      errorToast(error.message);
+      console.log("review error happended");
+      console.log(reviewError);
+      dispatch(clearErrors());
+    }
+
+    if (success) {
+      console.log("product reviewed successfully");
+
+      dispatch(clearErrors());
+    }
     dispatch(getProductDetails(id));
-  }, [dispatch, id, error]);
+  }, [dispatch, id, error, success, reviewError]);
   const incrementCount = () => {
     if (count < product.stock) {
       setCount(count + 1);
@@ -46,17 +76,36 @@ const ProductDetails = () => {
     }
   };
 
-  const { name, _id, stock } = product;
+  // const { name, _id, stock } = product;
 
   const addItemsToCartHandler = (e) => {
-    dispatch(addToCart(_id, count));
+    dispatch(addToCart(product?._id, count));
+  };
 
-    console.log("items added to cart", _id, count);
+  const submitReviewToggle = () => {
+    setOpen(!open);
+  };
+
+  const submitReviewHandler = () => {
+    const myForm = new FormData();
+
+    myForm.set("rating", rating);
+    myForm.set("comment", comment);
+    myForm.set("productId", product._id);
+    console.log(product._id, rating, comment);
+    dispatch(
+      newReview({
+        rating: Number(rating),
+        comment: comment,
+        productId: product._id,
+      })
+    );
+    setOpen(false);
   };
 
   return (
     <>
-      <Metadata title={`${name?.toUpperCase()}--ECOMMERCE`} />
+      <Metadata title={`${product?.name?.toUpperCase()}--ECOMMERCE`} />
       {loading ? (
         <Loader />
       ) : (
@@ -88,11 +137,20 @@ const ProductDetails = () => {
                     />
                     <button onClick={incrementCount}>+</button>
                   </div>
-                  <button onClick={addItemsToCartHandler}>Add To Cart</button>
+                  <button
+                    disabled={product?.stock < 1 ? true : false}
+                    onClick={addItemsToCartHandler}
+                  >
+                    Add To Cart
+                  </button>
                 </div>
                 <p>
                   Status:{" "}
-                  <b className={product?.stock < 1 ? "redColor" : "greenColor"}>
+                  <b
+                    style={
+                      product?.stock < 1 ? { color: "red" } : { color: "green" }
+                    }
+                  >
                     {product?.stock < 1 ? "Out of Stock" : "In Stock"}
                   </b>
                 </p>
@@ -100,11 +158,46 @@ const ProductDetails = () => {
               <div className="detailsBlock-4">
                 <span>Description: {product?.description}</span>
               </div>
-              <button className="submitReview">Submit Review</button>
+              <button onClick={submitReviewToggle} className="submitReview">
+                Submit Review
+              </button>
             </div>
           </div>
 
           <div className="reviewsHeading">REVIEWS</div>
+
+          <Dialog
+            aria-labelledby="simple-dialog-title"
+            open={open}
+            onClose={submitReviewToggle}
+          >
+            <DialogTitle>Submit Review</DialogTitle>
+            <DialogContent className="submitDialog">
+              <Rating
+                onChange={(e) => setRating(e.target.value)}
+                value={Number(rating)}
+                size="large"
+              />
+
+              <textarea
+                className="submitDialogTextArea"
+                name=""
+                id=""
+                cols="30"
+                rows="5"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              ></textarea>
+              <DialogActions>
+                <Button onClick={submitReviewToggle} color="secondary">
+                  Cancel
+                </Button>
+                <Button onClick={submitReviewHandler} color="success">
+                  Submit
+                </Button>
+              </DialogActions>
+            </DialogContent>
+          </Dialog>
           {product?.reviews && product?.reviews[0] ? (
             <div className="reviews">
               {product.reviews &&

@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as productConstants from "../constants/productConstants.js";
+//GET USER PRODUCTS//
 
 export const getProducts =
   (
@@ -30,6 +31,26 @@ export const getProducts =
     }
   };
 
+//GET ADMIN PRODUCTS//
+export const getAdminProducts = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: productConstants.ADMIN_PRODUCT_REQUEST,
+    });
+    const { data } = await axios.get(`/api/v1/admin/products`);
+    dispatch({
+      type: productConstants.ADMIN_PRODUCT_SUCCESS,
+      payload: data.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: productConstants.ADMIN_PRODUCT_FAILURE,
+      payload: error,
+    });
+  }
+};
+
+// GET PRODUCT DETAILS
 export const getProductDetails = (productId) => async (dispatch) => {
   try {
     dispatch({
@@ -43,7 +64,35 @@ export const getProductDetails = (productId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: productConstants.PRODUCT_DETAILS_FAILURE,
-      error: error,
+      payload: error,
+    });
+  }
+};
+// CREATE NEW REVIEW
+export const newReview = (reviewData) => async (dispatch) => {
+  try {
+    dispatch({
+      type: productConstants.NEW_REVIEW_REQUEST,
+    });
+    console.log(reviewData);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const { data } = await axios.put(
+      `/api/v1/product/reviews`,
+      reviewData,
+      config
+    );
+    dispatch({
+      type: productConstants.NEW_REVIEW_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: productConstants.NEW_REVIEW_FAILURE,
+      payload: error,
     });
   }
 };

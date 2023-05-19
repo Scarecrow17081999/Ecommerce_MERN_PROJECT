@@ -3,6 +3,7 @@ import * as productConstants from "../constants/productConstants.js";
 export const productReducer = (state = { products: [] }, action) => {
   switch (action.type) {
     case productConstants.ALL_PRODUCT_REQUEST:
+    case productConstants.ADMIN_PRODUCT_REQUEST:
       return {
         loading: true,
         products: [],
@@ -17,7 +18,14 @@ export const productReducer = (state = { products: [] }, action) => {
         filteredProductsCount: action.payload.filteredProductsCount,
         error: false,
       };
+
+    case productConstants.ADMIN_PRODUCT_SUCCESS:
+      return {
+        loading: false,
+        products: action.payload,
+      };
     case productConstants.ALL_PRODUCT_FAILURE:
+    case productConstants.ADMIN_PRODUCT_FAILURE:
       return {
         loading: false,
         error: action.payload,
@@ -31,7 +39,7 @@ export const productReducer = (state = { products: [] }, action) => {
       return state;
   }
 };
-
+// get product details
 export const productDetailsReducer = (state = { product: [] }, action) => {
   switch (action.type) {
     case productConstants.PRODUCT_DETAILS_REQUEST:
@@ -51,6 +59,41 @@ export const productDetailsReducer = (state = { product: [] }, action) => {
       return {
         loading: false,
         error: action.payload,
+      };
+    case productConstants.CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+
+// create a product review
+
+export const newReviewReducer = (state = {}, action) => {
+  switch (action.type) {
+    case productConstants.NEW_REVIEW_REQUEST:
+      return {
+        loading: true,
+        error: false,
+      };
+    case productConstants.NEW_REVIEW_SUCCESS:
+      return {
+        loading: false,
+        success: action.payload,
+      };
+    case productConstants.NEW_REVIEW_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case productConstants.NEW_REVIEW_RESET:
+      return {
+        ...state,
+        success: false,
       };
     case productConstants.CLEAR_ERRORS:
       return {

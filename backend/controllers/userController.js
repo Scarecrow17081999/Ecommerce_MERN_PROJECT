@@ -315,28 +315,30 @@ export const deleteUserByAdmin = async (req, res, next) => {
 export const createProductReview = async (req, res, next) => {
   try {
     const { rating, comment, productId } = req.body;
+
     const productReview = {
-      user: req.user._id,
+      user: String(req.user._id),
       name: req.user.name,
       rating: Number(rating),
       comment,
     };
-
+    console.log(String(req.user._id));
     const product = await ProductModel.findById(productId);
 
     if (!product) {
       return next(new ErrorHandler("Product Not Found", 404));
     }
-    const isReviewed = await product.reviews.find(
-      (review) => review.user.toString() === req.user._id.toString()
-    );
-    if (isReviewed) {
-      product.reviews.forEach((review) => {
-        if (review.user.toString() === req.user._id.toString()) {
-          review.rating = Number(rating);
-          review.comment = comment;
-        }
-      });
+    const isReviewed = await product.reviews.find((review) => {
+      console.log(review);
+      return String(review.user) == String(req.user._id);
+    });
+    if (false) {
+      // product.reviews.forEach((review) => {
+      //   if (review.user.toString() == req.user._id.toString()) {
+      //     review.rating = Number(rating);
+      //     review.comment = comment;
+      //   }
+      // });
     } else {
       product.reviews.push(productReview);
       product.numOfReviews = product.reviews.length;

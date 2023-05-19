@@ -127,3 +127,16 @@ export const getAllProducts = async (req, res, next) => {
     return next(new ErrorHandler("Internal server error", 500));
   }
 };
+//user route ///GETTING ALL PRODUCTS ADMIN//
+export const getAdminProducts = async (req, res, next) => {
+  try {
+    const data = await ProductModel.find();
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    console.log(error);
+    return next(new ErrorHandler("Internal server error", 500));
+  }
+};
