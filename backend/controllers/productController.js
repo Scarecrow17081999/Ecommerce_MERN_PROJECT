@@ -1,10 +1,33 @@
 import ProductModel from "../models/productModels.js";
 import ApiFeatures from "../utils/apiFeatures.js";
 import ErrorHandler from "../utils/errorHandler.js";
+
+import cloudinary from "cloudinary";
+
 //CREATE PRODUCT//Admin
 export const createProduct = async (req, res, next) => {
   try {
+    let images = [];
+    if (typeof req.body.images == "string") {
+      images.push(req.body.images);
+    } else {
+      images = req.body.images;
+    }
+
+    const imagesLink = [];
+
+    for (let i = 0; i < images.length; i++) {
+      const result = await cloudinary.v2.uploader.upload(images[i], {
+        folder: "products",
+      });
+      console.log(result);
+      imagesLink.push({
+        public_id: result.public_id,
+        url: result.secure_url,
+      });
+    }
     req.body.CreatedByuser = req.user.id;
+    req.body.images = imagesLink;
     const data = await ProductModel.create(req.body);
 
     res.status(201).json({ success: true, data });
@@ -34,6 +57,36 @@ export const updateProduct = async (req, res, next) => {
       return next(new ErrorHandler("Product not found", 404));
     }
 
+    //IMAGESS START HERE//
+
+    let images = [];
+    if (typeof req.body.images == "string") {
+      images.push(req.body.images);
+    } else {
+      images = req.body.images;
+    }
+
+    if (images != undefined) {
+      //delete image from cloudinary //
+      for (let i = 0; i < data.images.length; i++) {
+        await cloudinary.v2.uploader.destroy(data.images[i].public_id);
+      }
+    }
+    const imagesLink = [];
+
+    for (let i = 0; i < images.length; i++) {
+      const result = await cloudinary.v2.uploader.upload(images[i], {
+        folder: "products",
+      });
+      console.log(result);
+      imagesLink.push({
+        public_id: result.public_id,
+        url: result.secure_url,
+      });
+    }
+
+    req.body.images = imagesLink;
+
     //UPDATE THE DATA
     data = await ProductModel.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -59,6 +112,12 @@ export const deleteProduct = async (req, res, next) => {
     const data = await ProductModel.findByIdAndDelete(req.params.id);
     if (!data) {
       return next(new ErrorHandler("Product not found", 404));
+    }
+
+    //Delete product in cloudinary//
+
+    for (let i = 0; i < data.images.length; i++) {
+      await cloudinary.v2.uploader.destroy(data.images[i].public_id);
     }
 
     res

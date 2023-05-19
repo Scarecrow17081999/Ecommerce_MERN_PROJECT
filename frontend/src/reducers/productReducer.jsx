@@ -1,5 +1,6 @@
 import * as productConstants from "../constants/productConstants.js";
 
+// get product reducer
 export const productReducer = (state = { products: [] }, action) => {
   switch (action.type) {
     case productConstants.ALL_PRODUCT_REQUEST:
@@ -29,6 +30,42 @@ export const productReducer = (state = { products: [] }, action) => {
       return {
         loading: false,
         error: action.payload,
+      };
+    case productConstants.CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+// new product request reducer
+export const newProductReuquestReducer = (state = {}, action) => {
+  switch (action.type) {
+    case productConstants.NEW_PRODUCT_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: false,
+      };
+    case productConstants.NEW_PRODUCT_SUCCESS:
+      return {
+        loading: false,
+        success: action.payload.success,
+        product: action.payload,
+        error: false,
+      };
+
+    case productConstants.NEW_PRODUCT_FAILURE:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case productConstants.NEW_PRODUCT_RESET:
+      return {
+        loading: false,
+        success: false,
       };
     case productConstants.CLEAR_ERRORS:
       return {
@@ -94,6 +131,52 @@ export const newReviewReducer = (state = {}, action) => {
       return {
         ...state,
         success: false,
+      };
+    case productConstants.CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+// manupulate a product review
+
+export const productsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case productConstants.DELETE_PRODUCT_REQUEST:
+    case productConstants.UPDATE_PRODUCT_REQUEST:
+      return {
+        loading: true,
+        error: false,
+      };
+    case productConstants.DELETE_PRODUCT_SUCCESS:
+      return {
+        loading: false,
+        isDeleted: action.payload,
+      };
+    case productConstants.UPDATE_PRODUCT_SUCCESS:
+      return {
+        loading: false,
+        isUpdated: action.payload,
+      };
+    case productConstants.DELETE_PRODUCT_FAILURE:
+    case productConstants.UPDATE_PRODUCT_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case productConstants.DELETE_PRODUCT_RESET:
+      return {
+        ...state,
+        isDeleted: false,
+      };
+    case productConstants.UPDATE_PRODUCT_RESET:
+      return {
+        ...state,
+        isUpdated: false,
       };
     case productConstants.CLEAR_ERRORS:
       return {

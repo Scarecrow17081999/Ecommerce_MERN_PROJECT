@@ -25,14 +25,16 @@ import axios from "axios";
 import OrderSuccess from "./components/Cart/OrderSuccess";
 import Dashboard from "./components/admin/Dashboard.jsx";
 import ProductList from "./components/admin/ProductList.jsx";
+import NewProduct from "./components/admin/NewProduct";
+import UpdateProduct from "./components/admin/UpdateProduct.jsx";
+import OrderList from "./components/admin/OrderList.jsx";
+import ProcessOrder from "./components/admin/ProcessOrder.jsx";
 
 function App() {
   const [stripeApiKey, setStripeApiKey] = useState("");
   async function getStripeApiKey() {
     const { data } = await axios.get("/api/v1/stripeapikey");
     setStripeApiKey(data.stripeApiKey);
-
-    console.log(data);
   }
   useEffect(() => {
     WebFont.load({
@@ -70,6 +72,10 @@ function App() {
         {/* //ADMIN ROUTES// */}
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/products" element={<ProductList />} />
+        <Route path="/admin/product" element={<NewProduct />} />
+        <Route exact path="/admin/product/:id" element={<UpdateProduct />} />
+        <Route exact path="/admin/orders" element={<OrderList />} />
+        <Route exact path="/admin/orders/:id" element={<ProcessOrder />} />
       </Routes>
       <Footer />
     </div>

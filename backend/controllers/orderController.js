@@ -134,7 +134,7 @@ async function updateStock(id, quantity) {
 
 export const deleteOrder = async (req, res, next) => {
   try {
-    const order = await Order.find(req.params.id);
+    const order = await Order.findById(req.params.id);
     if (!order) {
       return next(
         new ErrorHandler(

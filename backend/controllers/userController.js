@@ -9,6 +9,7 @@ import sendMail from "../utils/sendMail.js";
 
 export const registerUser = async (req, res, next) => {
   try {
+    console.log(req.body);
     const { name, email, password } = req.body;
     const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
       folder: "avatars",
