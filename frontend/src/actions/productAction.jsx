@@ -176,6 +176,45 @@ export const updateProduct = (id, productData) => async (dispatch) => {
   }
 };
 
+// GET ALL REVIEWS OF A PRODUCT ADMIN
+export const getAllReview = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: productConstants.ALL_REVIEW_REQUEST,
+    });
+    const { data } = await axios.get(`/api/v1/product/reviews/${id}`);
+    dispatch({
+      type: productConstants.ALL_REVIEW_SUCCESS,
+      payload: data.reviews,
+    });
+  } catch (error) {
+    dispatch({
+      type: productConstants.ALL_REVIEW_FAILURE,
+      payload: error,
+    });
+  }
+};
+// DELETE REVIEWS OF A PRODUCT ADMIN
+export const deleteReview = (productId, id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: productConstants.DELETE_REVIEW_REQUEST,
+    });
+    const { data } = await axios.delete(
+      `/api/v1/product/reviews?productId=${productId}&id=${id}`
+    );
+    dispatch({
+      type: productConstants.DELETE_REVIEW_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: productConstants.DELETE_REVIEW_FAILURE,
+      payload: error,
+    });
+  }
+};
+
 //clear errors
 export const clearErrors = () => async (dispatch) => {
   dispatch({

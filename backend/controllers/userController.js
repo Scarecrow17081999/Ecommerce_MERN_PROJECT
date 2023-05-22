@@ -269,16 +269,18 @@ export const updateUserRoleByAdmin = async (req, res, next) => {
       email: req.body.email,
       role: req.body.role,
     };
-    const user = await User.findByIdAndUpdate(req.params.id, userDetails, {
-      new: true,
-      runValidators: true,
-      useFindAndModify: false,
-    });
+    let user = User.findById(req.user.id);
     if (!user) {
       return next(
         new ErrorHandler(`User not found with id ${req.params.id}`, 404)
       );
     }
+    user = await User.findByIdAndUpdate(req.params.id, userDetails, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    });
+
     res.status(200).json({
       success: true,
       user,
@@ -328,14 +330,12 @@ export const createProductReview = async (req, res, next) => {
       rating: Number(rating),
       comment,
     };
-    console.log(String(req.user._id));
     const product = await ProductModel.findById(productId);
 
     if (!product) {
       return next(new ErrorHandler("Product Not Found", 404));
     }
     const isReviewed = await product.reviews.find((review) => {
-      console.log(review);
       return String(review.user) == String(req.user._id);
     });
     if (false) {
@@ -383,7 +383,6 @@ export const getAllReviewsOfProduct = async (req, res, next) => {
       reviews: product.reviews,
     });
   } catch (error) {
-    // console.log(error);
     return next(new ErrorHandler(error, 500));
   }
 };

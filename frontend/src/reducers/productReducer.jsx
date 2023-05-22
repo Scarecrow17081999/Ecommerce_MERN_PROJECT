@@ -187,3 +187,70 @@ export const productsReducer = (state = {}, action) => {
       return state;
   }
 };
+
+// get all product reviews
+export const getAllProductReviewReducer = (state = { reviews: [] }, action) => {
+  switch (action.type) {
+    case productConstants.ALL_REVIEW_REQUEST:
+      return {
+        loading: true,
+        ...state,
+      };
+    case productConstants.ALL_REVIEW_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        reviews: action.payload,
+        error: false,
+      };
+    case productConstants.ALL_REVIEW_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case productConstants.CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+// admin reviews reducer
+export const deleteReviewReducer = (state = { reviews: [] }, action) => {
+  switch (action.type) {
+    case productConstants.DELETE_REVIEW_REQUEST:
+      return {
+        loading: true,
+        ...state,
+      };
+    case productConstants.DELETE_REVIEW_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        isDeleted: action.payload,
+        error: false,
+      };
+    case productConstants.DELETE_REVIEW_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case productConstants.DELETE_REVIEW_RESET:
+      return {
+        ...state,
+        loading: false,
+        isDeleted: false,
+      };
+    case productConstants.CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};

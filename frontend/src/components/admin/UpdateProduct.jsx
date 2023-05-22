@@ -62,7 +62,7 @@ const UpdateProduct = () => {
       console.log("product update failed");
     }
   }, [isUpdated, updateError, product, id, updateError]);
-  console.log(oldImages);
+
   const updateProductSubmitHandler = (e) => {
     e.preventDefault();
     const myForm = new FormData();

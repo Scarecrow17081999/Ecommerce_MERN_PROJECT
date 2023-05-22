@@ -33,9 +33,9 @@ const NewProduct = () => {
     (state) => state.newProductRequest
   );
 
-  useEffect(() => {
-    // dispatch(n);
-  }, []);
+  // useEffect(() => {
+
+  // }, []);
 
   const createProductSubmitHandler = (e) => {
     e.preventDefault();

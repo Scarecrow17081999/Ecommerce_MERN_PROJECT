@@ -207,7 +207,7 @@ export const getAllUsers = () => {
     }
   };
 };
-//load  user details
+//load  user details admin
 export const getUsersDetails = (id) => {
   return async (dispatch) => {
     try {
@@ -217,7 +217,7 @@ export const getUsersDetails = (id) => {
       const { data } = await axios.get(`/api/v1/admin/user/${id}`);
       dispatch({
         type: productConstants.USER_DETAIL_SUCCESS,
-        payload: data,
+        payload: data.user,
       });
     } catch (error) {
       dispatch({
@@ -228,7 +228,7 @@ export const getUsersDetails = (id) => {
   };
 };
 
-//update user
+//update user admin
 export const updateUserByAdmin = (id, userData) => {
   return async (dispatch) => {
     try {
@@ -259,7 +259,7 @@ export const updateUserByAdmin = (id, userData) => {
     }
   };
 };
-//deleteUser user
+//deleteUser user admin
 export const deleteUserByAdmin = (id) => {
   return async (dispatch) => {
     try {
